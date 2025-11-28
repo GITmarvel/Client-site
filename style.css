@@ -25,10 +25,11 @@ section{
 
 header{
     position: fixed;
-    top:10px;
+    top:0;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px 0px;
     width: 100vw;
     z-index: 10000;
 }
