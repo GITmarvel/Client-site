@@ -29,8 +29,7 @@ header{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 70px;
+    width: 100vw;
     z-index: 10000;
 }
 
