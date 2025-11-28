@@ -24,7 +24,8 @@ header{
 }
 
 header img{
-    max-width:150px;
+    width:200px;
+    background-position:center;
 }
 
 section{
@@ -553,6 +554,7 @@ header .logo img{
         font-size: 1rem;
     }
 }
+
 
 
 
