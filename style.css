@@ -30,7 +30,8 @@ header{
     justify-content: center;
     align-items: center;
     padding: 10px 0px;
-    width: 100vw;
+    width: 100vw;
+    height:40px;
     z-index: 10000;
 }
 
