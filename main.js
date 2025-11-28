@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Lenis Smooth Scroll Setup ---
   const lenis = new Lenis({
     lerp: isMobile ? 0.12 : 0.06,       // semi-smooth: slightly faster on mobile
-    wheelMultiplier: isMobile ? 1.8 : 1.4,
+    wheelMultiplier: isMobile ? 8 : 4,
     smoothWheel: true,
     smoothTouch: true
   });
