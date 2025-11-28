@@ -14,20 +14,6 @@ body{
     font-family: "Host Grotesk" , sans-serif;
 }
 
-header{
-    display:flex;
-    position:fixed;
-    width:100%;
-    height:40px;
-    justify-content:center;
-    align-items:center;
-}
-
-header img{
-    width:200px;
-    background-position:center;
-}
-
 section{
     position: relative;
     width: 100%;
@@ -40,45 +26,17 @@ section{
 header{
     position: fixed;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100vw;
     height: 40px;
-    z-index: 10000;
-    padding: 40px 120px;
-}
+    z-index: 10000;
+}
 
-header ul{
-    display: flex;
+header img{
+    width:200px;
+    background-position:center;
 }
-
-header ul li{
-    list-style: none;
-}
-
-header ul li a{
-    display: inline-block;
-    padding: 12px 18px;
-    margin: 0px 10px;
-    text-decoration: none;
-    color: #fff;
-}
-
-header .logo{
-    position: relative;
-    width: 300px;
-    height: 300px;
-}
-
-header .logo img{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
 
 .first{
     justify-content: space-around;
