@@ -1,17 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
   gsap.registerPlugin(ScrollTrigger);
 
-  // --- IMPORTANT for mobile + Lenis + pinned sections ---
   ScrollTrigger.normalizeScroll(true);
   ScrollTrigger.config({ ignoreMobileResize: true });
 
-  // --- LENIS SMOOTH SCROLL ---
+  const isMobile = window.innerWidth < 768;
+
   const lenis = new Lenis({
-  lerp: 0.07,
-  wheelMultiplier: 1.6,
-  smoothWheel: true,
-  smoothTouch: true,
-});
+    lerp: isMobile ? 0.12 : 0.06,
+    wheelMultiplier: isMobile ? 1.8 : 1.4,
+    smoothWheel: true,
+    smoothTouch: true
+  });
 
   function raf(time) {
     lenis.raf(time);
@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   gsap.ticker.add(raf);
 
-  // --- KEYWORD HIGHLIGHT SETUP ---
   const animeTextParagraphs = document.querySelectorAll(".anime-text p");
   const highlightBg = "60, 60, 60";
   const keywords = ["health", "communication", "influence", "revona", "excellence", "values"];
@@ -49,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- SCROLL ANIMATION ---
   const animeTextContainers = document.querySelectorAll(".anime-text-container");
 
   animeTextContainers.forEach((container) => {
@@ -59,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       pinSpacing: true,
       start: "top top",
       end: () => `+=${window.innerHeight * 4}`,
-      pinType: container.style.transform ? "transform" : "fixed", // mobile fix
+      pinType: container.style.transform ? "transform" : "fixed",
 
       onUpdate: (self) => {
         const progress = self.progress;
@@ -69,7 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
         words.forEach((word, index) => {
           const wordText = word.querySelector("span");
 
-          // PHASE 1: If we're in the active animation zone
           if (progress < 0.7) {
             const revealTotal = 0.7;
             const revealProgress = progress / revealTotal;
@@ -85,15 +82,12 @@ document.addEventListener("DOMContentLoaded", () => {
               revealProgress > wordEnd ? 1 :
               (revealProgress - wordStart) / duration;
 
-            // Word opacity
             word.style.opacity = wordProgress;
 
-            // Background fade
             const bgFade = wordProgress > 0.9 ? (wordProgress - 0.9) / 0.1 : 0;
             const bgOpacity = 1 - bgFade;
             word.style.backgroundColor = `rgba(${highlightBg}, ${bgOpacity})`;
 
-            // Text reveal (slight delay)
             const threshold = 0.9;
             const textProgress =
               wordProgress > threshold
