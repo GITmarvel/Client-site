@@ -1,13 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // --- GSAP & ScrollTrigger ---
   gsap.registerPlugin(ScrollTrigger);
 
+  // Normalize scroll for mobile + pinned sections
   ScrollTrigger.normalizeScroll(true);
   ScrollTrigger.config({ ignoreMobileResize: true });
 
+  // --- Detect mobile for tuning ---
   const isMobile = window.innerWidth < 768;
 
+  // --- Lenis Smooth Scroll Setup ---
   const lenis = new Lenis({
-    lerp: isMobile ? 0.12 : 0.06,
+    lerp: isMobile ? 0.12 : 0.06,       // semi-smooth: slightly faster on mobile
     wheelMultiplier: isMobile ? 1.8 : 1.4,
     smoothWheel: true,
     smoothTouch: true
@@ -19,15 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   gsap.ticker.add(raf);
 
+  // --- Keyword Highlight Setup ---
   const animeTextParagraphs = document.querySelectorAll(".anime-text p");
   const highlightBg = "60, 60, 60";
   const keywords = ["health", "communication", "influence", "revona", "excellence", "values"];
 
-  animeTextParagraphs.forEach((paragraph) => {
+  animeTextParagraphs.forEach(paragraph => {
     const words = paragraph.textContent.split(/\s+/);
     paragraph.innerHTML = "";
 
-    words.forEach((word) => {
+    words.forEach(word => {
       if (!word.trim()) return;
 
       const wordContainer = document.createElement("div");
@@ -48,16 +53,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // --- ScrollTrigger Animation for Pinned Section ---
   const animeTextContainers = document.querySelectorAll(".anime-text-container");
 
-  animeTextContainers.forEach((container) => {
+  animeTextContainers.forEach(container => {
     ScrollTrigger.create({
       trigger: container,
       pin: container,
       pinSpacing: true,
       start: "top top",
       end: () => `+=${window.innerHeight * 4}`,
-      pinType: container.style.transform ? "transform" : "fixed",
+      pinType: container.style.transform ? "transform" : "fixed", // mobile fix
 
       onUpdate: (self) => {
         const progress = self.progress;
@@ -82,12 +88,15 @@ document.addEventListener("DOMContentLoaded", () => {
               revealProgress > wordEnd ? 1 :
               (revealProgress - wordStart) / duration;
 
+            // Word opacity
             word.style.opacity = wordProgress;
 
+            // Background fade
             const bgFade = wordProgress > 0.9 ? (wordProgress - 0.9) / 0.1 : 0;
             const bgOpacity = 1 - bgFade;
             word.style.backgroundColor = `rgba(${highlightBg}, ${bgOpacity})`;
 
+            // Text reveal
             const threshold = 0.9;
             const textProgress =
               wordProgress > threshold
@@ -101,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Refresh ScrollTrigger after setup
   ScrollTrigger.refresh();
             
 
