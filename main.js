@@ -1,6 +1,115 @@
 document.addEventListener("DOMContentLoaded", () => {
   gsap.registerPlugin(ScrollTrigger);
 
+  // --- IMPORTANT for mobile + Lenis + pinned sections ---
+  ScrollTrigger.normalizeScroll(true);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  // --- LENIS SMOOTH SCROLL ---
+  const lenis = new Lenis({
+    smoothWheel: true,
+    smoothTouch: true
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    ScrollTrigger.update();
+  }
+  gsap.ticker.add(raf);
+
+  // --- KEYWORD HIGHLIGHT SETUP ---
+  const animeTextParagraphs = document.querySelectorAll(".anime-text p");
+  const highlightBg = "60, 60, 60";
+  const keywords = ["health", "communication", "influence", "revona", "excellence", "values"];
+
+  animeTextParagraphs.forEach((paragraph) => {
+    const words = paragraph.textContent.split(/\s+/);
+    paragraph.innerHTML = "";
+
+    words.forEach((word) => {
+      if (!word.trim()) return;
+
+      const wordContainer = document.createElement("div");
+      wordContainer.className = "word";
+
+      const wordText = document.createElement("span");
+      wordText.textContent = word;
+
+      const normalized = word.toLowerCase().replace(/[.,!?;:"]/g, "");
+
+      if (keywords.includes(normalized)) {
+        wordContainer.classList.add("keyword-wrapper");
+        wordText.classList.add("keyword", normalized);
+      }
+
+      wordContainer.appendChild(wordText);
+      paragraph.appendChild(wordContainer);
+    });
+  });
+
+  // --- SCROLL ANIMATION ---
+  const animeTextContainers = document.querySelectorAll(".anime-text-container");
+
+  animeTextContainers.forEach((container) => {
+    ScrollTrigger.create({
+      trigger: container,
+      pin: container,
+      pinSpacing: true,
+      start: "top top",
+      end: () => `+=${window.innerHeight * 4}`,
+      pinType: container.style.transform ? "transform" : "fixed", // mobile fix
+
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const words = [...container.querySelectorAll(".anime-text .word")];
+        const totalWords = words.length;
+
+        words.forEach((word, index) => {
+          const wordText = word.querySelector("span");
+
+          // PHASE 1: If we're in the active animation zone
+          if (progress < 0.7) {
+            const revealTotal = 0.7;
+            const revealProgress = progress / revealTotal;
+
+            const overlap = 15;
+            const wordStart = index / totalWords;
+            const wordEnd = wordStart + overlap / totalWords;
+
+            const duration = wordEnd - wordStart;
+
+            let wordProgress =
+              revealProgress < wordStart ? 0 :
+              revealProgress > wordEnd ? 1 :
+              (revealProgress - wordStart) / duration;
+
+            // Word opacity
+            word.style.opacity = wordProgress;
+
+            // Background fade
+            const bgFade = wordProgress > 0.9 ? (wordProgress - 0.9) / 0.1 : 0;
+            const bgOpacity = 1 - bgFade;
+            word.style.backgroundColor = `rgba(${highlightBg}, ${bgOpacity})`;
+
+            // Text reveal (slight delay)
+            const threshold = 0.9;
+            const textProgress =
+              wordProgress > threshold
+                ? (wordProgress - threshold) / (1 - threshold)
+                : 0;
+
+            wordText.style.opacity = Math.sqrt(textProgress);
+          }
+        });
+      },
+    });
+  });
+
+  ScrollTrigger.refresh();
+
+/ *document.addEventListener("DOMContentLoaded", () => {
+  gsap.registerPlugin(ScrollTrigger);
+
   // Lenis smooth scroll
   const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
@@ -100,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  ScrollTrigger.refresh();
+  ScrollTrigger.refresh();*/
 
     const slides = [
     { title: "content 1", image: "deser.jpg" },
