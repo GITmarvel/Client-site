@@ -7,9 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- LENIS SMOOTH SCROLL ---
   const lenis = new Lenis({
-    smoothWheel: true,
-    smoothTouch: true
-  });
+  lerp: 0.07,
+  wheelMultiplier: 1.6,
+  smoothWheel: true,
+  smoothTouch: true,
+});
 
   function raf(time) {
     lenis.raf(time);
