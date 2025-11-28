@@ -476,7 +476,7 @@ header .logo img{
     .intro{
       font-size: 1.2em;
       text-align: center;
-      margin: 10px 0px;
+      margin: 20px 0px;
       color: #333;
     }
 
@@ -486,7 +486,7 @@ header .logo img{
 
 .first .imgbx{
     position: relative;
-    top: 20px;
+    top: 5px;
     display: flex;
     justify-content: center;
     width: 300px;
@@ -540,5 +540,6 @@ header .logo img{
         font-size: 1rem;
     }
 }
+
 
 
