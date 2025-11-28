@@ -1,117 +1,107 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- GSAP & ScrollTrigger ---
-  gsap.registerPlugin(ScrollTrigger);
-
-  // Normalize scroll for mobile + pinned sections
-  ScrollTrigger.normalizeScroll(true);
-  ScrollTrigger.config({ ignoreMobileResize: true });
-
-  // --- Detect mobile for tuning ---
-  const isMobile = window.innerWidth < 768;
-
-  // --- Lenis Smooth Scroll Setup ---
-  const lenis = new Lenis({
-    lerp: isMobile ? 0.12 : 0.06,       // semi-smooth: slightly faster on mobile
-    wheelMultiplier: isMobile ? 8 : 4,
-    smoothWheel: true,
-    smoothTouch: true
-  });
-
-  function raf(time) {
-    lenis.raf(time);
-    ScrollTrigger.update();
-  }
-  gsap.ticker.add(raf);
-
-  // --- Keyword Highlight Setup ---
-  const animeTextParagraphs = document.querySelectorAll(".anime-text p");
-  const highlightBg = "60, 60, 60";
-  const keywords = ["health", "communication", "influence", "revona", "excellence", "values"];
-
-  animeTextParagraphs.forEach(paragraph => {
-    const words = paragraph.textContent.split(/\s+/);
-    paragraph.innerHTML = "";
-
-    words.forEach(word => {
-      if (!word.trim()) return;
-
-      const wordContainer = document.createElement("div");
-      wordContainer.className = "word";
-
-      const wordText = document.createElement("span");
-      wordText.textContent = word;
-
-      const normalized = word.toLowerCase().replace(/[.,!?;:"]/g, "");
-
-      if (keywords.includes(normalized)) {
-        wordContainer.classList.add("keyword-wrapper");
-        wordText.classList.add("keyword", normalized);
-      }
-
-      wordContainer.appendChild(wordText);
-      paragraph.appendChild(wordContainer);
-    });
-  });
-
-  // --- ScrollTrigger Animation for Pinned Section ---
-  const animeTextContainers = document.querySelectorAll(".anime-text-container");
-
-  animeTextContainers.forEach(container => {
-    ScrollTrigger.create({
-      trigger: container,
-      pin: container,
-      pinSpacing: true,
-      start: "top top",
-      end: () => `+=${window.innerHeight * 4}`,
-      pinType: container.style.transform ? "transform" : "fixed", // mobile fix
-
-      onUpdate: (self) => {
-        const progress = self.progress;
-        const words = [...container.querySelectorAll(".anime-text .word")];
-        const totalWords = words.length;
-
-        words.forEach((word, index) => {
-          const wordText = word.querySelector("span");
-
-          if (progress < 0.7) {
-            const revealTotal = 0.7;
-            const revealProgress = progress / revealTotal;
-
-            const overlap = 15;
-            const wordStart = index / totalWords;
-            const wordEnd = wordStart + overlap / totalWords;
-
-            const duration = wordEnd - wordStart;
-
-            let wordProgress =
-              revealProgress < wordStart ? 0 :
-              revealProgress > wordEnd ? 1 :
-              (revealProgress - wordStart) / duration;
-
-            // Word opacity
-            word.style.opacity = wordProgress;
-
-            // Background fade
-            const bgFade = wordProgress > 0.9 ? (wordProgress - 0.9) / 0.1 : 0;
-            const bgOpacity = 1 - bgFade;
-            word.style.backgroundColor = `rgba(${highlightBg}, ${bgOpacity})`;
-
-            // Text reveal
-            const threshold = 0.9;
-            const textProgress =
-              wordProgress > threshold
-                ? (wordProgress - threshold) / (1 - threshold)
-                : 0;
-
-            wordText.style.opacity = Math.sqrt(textProgress);
-          }
-        });
-      },
-    });
-  });
-
-  // Refresh ScrollTrigger after setup
-  ScrollTrigger.refresh();
+‎  gsap.registerPlugin(ScrollTrigger);
+‎
+‎  // Lenis smooth scroll
+‎  const lenis = new Lenis();
+‎  lenis.on("scroll", ScrollTrigger.update);
+‎  gsap.ticker.add((time) => lenis.raf(time * 1000));
+‎  gsap.ticker.lagSmoothing(0);
+‎
+‎  const animeTextParagraphs = document.querySelectorAll(".anime-text p");
+‎  const wordHighlightBgColor = "60, 60, 60";
+‎  const keywords = ["health", "communication", "influence", "revona", "excellence", "values"];
+‎
+‎  animeTextParagraphs.forEach((paragraph) => {
+‎    const words = paragraph.textContent.split(/\s+/);
+‎    paragraph.innerHTML = "";
+‎
+‎    words.forEach((word) => {
+‎      if (word.trim()) {
+‎        const wordContainer = document.createElement("div");
+‎        wordContainer.className = "word";
+‎
+‎        const wordText = document.createElement("span");
+‎        wordText.textContent = word;
+‎
+‎        const normalizedWord = word.toLowerCase().replace(/[.,!?;:"]/g, "");
+‎        if (keywords.includes(normalizedWord)) {
+‎          wordContainer.classList.add("keyword-wrapper");
+‎          wordText.classList.add("keyword", normalizedWord);
+‎        }
+‎
+‎        wordContainer.appendChild(wordText);
+‎        paragraph.appendChild(wordContainer);
+‎      }
+‎    });
+‎  });
+‎
+‎  const animeTextContainers = document.querySelectorAll(".anime-text-container");
+‎
+‎  animeTextContainers.forEach((container) => {
+‎    ScrollTrigger.create({
+‎      trigger: container,
+‎      pin: container,
+‎      start: "top top",
+‎      end: () => `+=${window.innerHeight * 4}`,
+‎      pinSpacing: true,
+‎      onUpdate: (self) => {
+‎        const progress = self.progress;
+‎        const words = Array.from(container.querySelectorAll(".anime-text .word"));
+‎        const totalWords = words.length;
+‎
+‎        words.forEach((word, index) => {
+‎          const wordText = word.querySelector("span");
+‎
+‎          if (progress < 0.7) {
+‎            const progressTarget = 0.7;
+‎            const revealProgress = Math.min(1, progress / progressTarget);
+‎
+‎            const overlapWords = 15;
+‎            const totalAnimationLength = 1 + overlapWords / totalWords;
+‎
+‎            const wordStart = index / totalWords;
+‎            const wordEnd = wordStart + overlapWords / totalWords;
+‎
+‎            const timelineScale =
+‎              1 /
+‎              Math.min(
+‎                totalAnimationLength,
+‎                1 + (totalWords - 1) / totalWords + overlapWords / totalWords
+‎              );
+‎
+‎            const adjustedStart = wordStart * timelineScale;
+‎            const adjustedEnd = wordEnd * timelineScale;
+‎            const duration = adjustedEnd - adjustedStart;
+‎
+‎            const wordProgress =
+‎              revealProgress < adjustedStart
+‎                ? 0
+‎                : revealProgress > adjustedEnd
+‎                ? 1
+‎                : (revealProgress - adjustedStart) / duration;
+‎
+‎            word.style.opacity = wordProgress;
+‎
+‎            const backgroundFadeStart = wordProgress > 0.9 ? (wordProgress - 0.9) / 0.1 : 0;
+‎            const backgroundOpacity = Math.max(0, 1 - backgroundFadeStart);
+‎            word.style.backgroundColor = `rgba(${wordHighlightBgColor}, ${backgroundOpacity})`;
+‎
+‎            const textRevealThreshold = 0.9;
+‎            const textRevealProgress =
+‎              wordProgress > textRevealThreshold
+‎                ? (wordProgress - textRevealThreshold) / (1 - textRevealThreshold)
+‎                : 0;
+‎
+‎            wordText.style.opacity = Math.pow(textRevealProgress, 0.5);
+‎          }
+‎        });
+‎      },
+‎    });
+‎  });
+‎
+‎
+‎  ScrollTrigger.refresh();
+‎
             
 
     const slides = [
