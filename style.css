@@ -150,8 +150,9 @@ section{
 }
 
 .second .anime-text .bout{
-  font-size:1.5rem;
+  font-size:1.8rem;
   text-transform:uppercase;
+  font-weight:900;
 }
 
 .second .anime-text p{
@@ -540,6 +541,7 @@ section{
         font-size: 1rem;
     }
 }
+
 
 
 
