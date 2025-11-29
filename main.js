@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Lenis smooth scroll
   const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
-  gsap.ticker.add((time) => lenis.raf(time * 90));
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
 
   const animeTextParagraphs = document.querySelectorAll(".anime-text p");
@@ -458,5 +458,6 @@ if (animateOnScroll) {
     }
   });
 }
+
 
 
