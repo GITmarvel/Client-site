@@ -2,10 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   gsap.registerPlugin(ScrollTrigger);
 
   // Lenis smooth scroll
-  const lenis = new Lenis();
+ /* const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
-  gsap.ticker.lagSmoothing(0);
+  gsap.ticker.lagSmoothing(0);*/
 
   const animeTextParagraphs = document.querySelectorAll(".anime-text p");
   const wordHighlightBgColor = "60, 60, 60";
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       trigger: container,
       pin: container,
       start: "top top",
-      end: () => `+=${window.innerHeight * 8}`,
+      end: () => `+=${window.innerHeight * 4}`,
       pinSpacing: true,
       onUpdate: (self) => {
         const progress = self.progress;
