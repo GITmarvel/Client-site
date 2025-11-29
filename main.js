@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       trigger: container,
       pin: container,
       start: "top top",
-      end: () => `+=${window.innerHeight * 5}`,
+      end: () => `+=${window.innerHeight * 8}`,
       pinSpacing: true,
       onUpdate: (self) => {
         const progress = self.progress;
