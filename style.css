@@ -401,6 +401,7 @@ section{
 .footer{
     position: relative;
     width: 100vw;
+    box-sizing:border-box;
     height: 100svh;
     padding: 2rem;
     overflow: hidden;
